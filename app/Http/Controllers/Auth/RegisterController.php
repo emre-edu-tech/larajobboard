@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
+use App\Role;
 
 class RegisterController extends Controller
 {
@@ -52,6 +53,7 @@ class RegisterController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'role' => ['required', 'integer']
         ]);
     }
 
@@ -63,10 +65,38 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        return User::create([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'password' => Hash::make($data['password']),
-        ]);
+        $user = new User();
+        $user->name = $data['name'];
+        $user->email = $data['email'];
+        $user->password = Hash::make($data['password']);
+        
+        $role = Role::find($data['role']);
+
+        $role->users()->save($user);
+
+        // return User::create([
+        //     'name' => $data['name'],
+        //     'email' => $data['email'],
+        //     'password' => Hash::make($data['password']),
+        // ]);
+
+        return $user;
+    }
+
+    public function showRegistrationForm()
+    {
+        $roles = Role::all();
+        $roleOptions = array();      // created an empty array
+        // build a roleOptions array that will be populated with roles that we specified
+        // or return an array that says no roles found
+        if (count($roles) > 0) {
+            foreach ($roles as $role) {
+                $roleOptions[$role['id']] = $role->name;
+            }
+        }else{
+            $roleOptions[0] = "No roles found";
+        }
+
+        return view('auth.register')->with('roleOptions', $roleOptions);
     }
 }

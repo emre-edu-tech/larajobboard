@@ -71,10 +71,32 @@
                 </div>
             </div>
         </nav>
-
-        <main class="py-4">
-            @yield('content')
-        </main>
+        
+        <!-- added our own menu here -->
+        <div class="container-flex">
+            <!-- row will have 3 columns which are menu on the left, content at the center, on the right side any details that we will show to the user -->
+            <div class="row">
+                <!-- menu will be on the left side -->
+                <div class="col-2">
+                    <ul>
+                        @if(count($usermenu) >= 1)
+                            @foreach($usermenu as $anchor_link => $menuItem)
+                                <li><a href="{{$anchor_link}}">{{$menuItem}}</a></li>
+                            @endforeach
+                        @endif
+                    </ul>
+                </div>
+                <div class="col-8">
+                    <main class="py-4">
+                        @include('components.messages')
+                        @yield('content')
+                    </main>      
+                </div>
+                <div class="col-2">
+                    @include('components.favouriteswidget')
+                </div>
+            </div>
+        </div>
     </div>
 </body>
 </html>
