@@ -81,7 +81,7 @@
 
             <div class="content">
                 <div class="title m-b-md">
-                    Welcome to Freelancer Website
+                    Welcome to Freelancer Jobboard
                 </div>
 
                 <p>Register or login to view or post jobs</p>
